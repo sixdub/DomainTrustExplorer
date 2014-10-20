@@ -29,10 +29,13 @@ class GraphShell(Cmd):
 	#Allow user to run local shell commands and print output
 	def do_shell(self, line):
 		"Run a shell command"
-		print "[*] Running shell command:", line
-		output = os.popen(line).read()
-		print output
-		self.last_output = output
+		if line:
+			print "[*] Running shell command:", line
+			output = os.popen(line).read()
+			print output
+			self.last_output = output
+		else:
+			print "[-] Error: Cmd Needed"
 
 	#Handle our commands for exit, Ctrl-D and EOF
 	def do_exit(self,line):
@@ -66,9 +69,15 @@ class GraphShell(Cmd):
 	#Command go show all shortest paths
 	def do_path(self, args):
 		"Display the shortest path between two nodes"
-		#Grab the args
-		node1=args.split(" ")[0].upper()
-		node2=args.split(" ")[1].upper()
+
+		arglist = args.split(" ")
+
+		if arglist[0] and arglist[1]:
+			#Grab the args
+			node1=arglist[0].upper()
+			node2=arglist[1].upper()
+		else:
+			print "[-] Error: Args Needed"
 
 		#ensure they exist
 		if G.has_node(node1) and G.has_node(node2):
@@ -91,9 +100,15 @@ class GraphShell(Cmd):
 	#Show all paths
 	def do_all_paths(self,args):
 		"Display all paths between two nodes"
-		#Grab the args
-		node1=args.split(" ")[0].upper()
-		node2=args.split(" ")[1].upper()
+
+		arglist = args.split(" ")
+
+		if arglist[0] and arglist[1]:
+			#Grab the args
+			node1=arglist[0].upper()
+			node2=arglist[1].upper()
+		else:
+			print "[-] Error: Args Needed"
 
 		#ensure they exist
 		if G.has_node(node1) and G.has_node(node2):
@@ -116,15 +131,19 @@ class GraphShell(Cmd):
 	#Print all neighbors of a certain node
 	def do_neighbors(self,args):
 		"Show all the neighbors for a certain node"
-		node = args.upper()
-		if G.has_node(node):
-			l = G.neighbors(node)
-			
-			print "[*] Neighbors:"
-			for n in l:
-				print n
+
+		if args:
+			node = args.upper()
+			if G.has_node(node):
+				l = G.neighbors(node)
+				
+				print "[*] Neighbors:"
+				for n in l:
+					print n
+			else:
+				print "[-] Error: No node in the graph"
 		else:
-			print "[-] No node in the graph"
+			print "[-] Error: Args Needed"
 
 	#print all isolated nodes
 	def do_isolated(self, args):
@@ -159,7 +178,8 @@ class GraphShell(Cmd):
 	#notify the user if a node exist
 	def do_is_node(self, args):
 		"Tell the user if the node is in the graph"
-		print "[*] "+args.upper()+": "+G.has_node(args.upper())
+		if args:
+			print "[*] "+args.upper()+": "+G.has_node(args.upper())
 
 if __name__ == '__main__':
 	#open our file
@@ -187,10 +207,13 @@ if __name__ == '__main__':
 
 		#assign edge colors based on the kind of relationship
 		ecolor ='#000000'
+		#blue
 		if "CROSSLINK" in relationship:
 			ecolor='#0000CC'
+		#red
 		elif "PARENTCHILD" in relationship:
 			ecolor='#FF0000'
+		#green
 		elif "EXTERNAL" in relationship:
 			ecolor='#009900'
 
