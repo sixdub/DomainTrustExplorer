@@ -199,9 +199,9 @@ if __name__ == '__main__':
 			G.add_edge(node1, node2, color=ecolor)
 			G.add_edge(node2, node1, color=ecolor)
 		elif "OUTBOUND" in edgetype:
-			G.add_edge(node1, node2, color=ecolor)
-		elif "INBOUND" in edgetype:
 			G.add_edge(node2, node1, color=ecolor)
+		elif "INBOUND" in edgetype:
+			G.add_edge(node1, node2, color=ecolor)
 		else:
 			print "[-] UNRECOGNIZED RELATIONSHIP DIRECTION"
 			exit()
