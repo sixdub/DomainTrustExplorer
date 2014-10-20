@@ -85,6 +85,30 @@ class GraphShell(Cmd):
 		else:
 			print "Node %s or %s does not exist :(" % (node1, node2)
 
+	#Show all paths
+	def do_all_paths(self,args):
+		"Display all paths between two nodes"
+		#Grab the args
+		node1=args.split(" ")[0].upper()
+		node2=args.split(" ")[1].upper()
+
+		#ensure they exist
+		if G.has_node(node1) and G.has_node(node2):
+			if (nx.has_path(G,node1,node2)):
+				#Get the shortest paths
+				paths = nx.all_simple_paths(G, node1, node2)
+
+				#Print all paths in pretty format
+				for p in paths:
+					outputpath = "[*] "
+					for n in p:
+						outputpath+=n+" -> "
+					print outputpath[:-4]
+			else:
+				print "No path exist :("
+		else:
+			print "Node %s or %s does not exist :(" % (node1, node2)
+
 	#Print all neighbors of a certain node
 	def do_neighbors(self,args):
 		"Show all the neighbors for a certain node"
