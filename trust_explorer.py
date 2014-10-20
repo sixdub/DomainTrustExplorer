@@ -29,7 +29,7 @@ class GraphShell(Cmd):
 	#Allow user to run local shell commands and print output
 	def do_shell(self, line):
 		"Run a shell command"
-		print "running shell command:", line
+		print "[*] Running shell command:", line
 		output = os.popen(line).read()
 		print output
 		self.last_output = output
@@ -48,16 +48,18 @@ class GraphShell(Cmd):
 		"Creates output as GML"
 		ofile = filename+".gml"
 		nx.write_gml(G, ofile)
-		print "%s written!"%ofile
+		print "[*] %s written!"%ofile
 
 	#Dump the graph in GraphML format
 	def do_graphml_dump(self, line):
 		"Creates output as GraphML"
 		ofile = filename+".graphml"
 		nx.write_graphml(G, ofile)
-		print "%s written!"%ofile
+		print "[*] %s written!"%ofile
 
 	def do_list_nodes(self,line):
+		"List all nodes for the graph"
+		print "[*] All nodes: "
 		for n in nx.nodes_iter(G):
 			print n
 
@@ -71,6 +73,7 @@ class GraphShell(Cmd):
 		#ensure they exist
 		if G.has_node(node1) and G.has_node(node2):
 			if (nx.has_path(G,node1,node2)):
+				print "[*] Shortest Paths from %s to %s" %(node1,node2)
 				#Get the shortest paths
 				paths = nx.all_shortest_paths(G, node1, node2)
 
@@ -81,9 +84,9 @@ class GraphShell(Cmd):
 						outputpath+=n+" -> "
 					print outputpath[:-4]
 			else:
-				print "No path exist :("
+				print "[-] No path exist :("
 		else:
-			print "Node %s or %s does not exist :(" % (node1, node2)
+			print "[-] Node %s or %s does not exist :(" % (node1, node2)
 
 	#Show all paths
 	def do_all_paths(self,args):
@@ -95,6 +98,7 @@ class GraphShell(Cmd):
 		#ensure they exist
 		if G.has_node(node1) and G.has_node(node2):
 			if (nx.has_path(G,node1,node2)):
+				print "[*] All Paths from %s to %s" %(node1,node2)
 				#Get the shortest paths
 				paths = nx.all_simple_paths(G, node1, node2)
 
@@ -105,9 +109,9 @@ class GraphShell(Cmd):
 						outputpath+=n+" -> "
 					print outputpath[:-4]
 			else:
-				print "No path exist :("
+				print "[-] No path exist :("
 		else:
-			print "Node %s or %s does not exist :(" % (node1, node2)
+			print "[-] Node %s or %s does not exist :(" % (node1, node2)
 
 	#Print all neighbors of a certain node
 	def do_neighbors(self,args):
@@ -116,16 +120,16 @@ class GraphShell(Cmd):
 		if G.has_node(node):
 			l = G.neighbors(node)
 			
-			print "Neighbors:"
+			print "[*] Neighbors:"
 			for n in l:
 				print n
 		else:
-			print "No node in the graph"
+			print "[-] No node in the graph"
 
 	#print all isolated nodes
 	def do_isolated(self, args):
 		"Show all nodes that are isolated"
-		print "Isolated Nodes:"
+		print "[*] Isolated Nodes:"
 		for n in G.nodes():
 			if len(G.neighbors(n)) ==1:
 				print n
@@ -137,7 +141,7 @@ class GraphShell(Cmd):
 		cent_items=[(b,a) for (a,b) in d.iteritems()]
 		cent_items.sort()
 		cent_items.reverse()
-
+		print "[*] Most Central Nodes"
 		for i in range(0,5):
 			if cent_items[i]:
 				print cent_items[i]
@@ -147,14 +151,15 @@ class GraphShell(Cmd):
 		"Show statistics on my trust map"
 		ncount = len(G)
 		ecount = G.number_of_edges()
-		print "Summary:"
+		print "[*] Summary:"
 		print "Filename: %s"%filename
 		print "Node Count: %d"%ncount
 		print "Edge Count: %d"%ecount
 
 	#notify the user if a node exist
 	def do_is_node(self, args):
-		print G.has_node(args.upper())
+		"Tell the user if the node is in the graph"
+		print "[*] "+args.upper()+": "+G.has_node(args.upper())
 
 if __name__ == '__main__':
 	#open our file
@@ -198,9 +203,9 @@ if __name__ == '__main__':
 		elif "INBOUND" in edgetype:
 			G.add_edge(node2, node1, color=ecolor)
 		else:
-			print "UNRECOGNIZED RELATIONSHIP DIRECTION"
+			print "[-] UNRECOGNIZED RELATIONSHIP DIRECTION"
 			exit()
 
 		c+=1
-	print "%d relationships read in... starting shell" % c
+	print "[*] %d relationships read in... starting shell" % c
 	GraphShell().cmdloop()
