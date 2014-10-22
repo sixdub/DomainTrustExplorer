@@ -48,14 +48,14 @@ class GraphShell(Cmd):
 
 	#Dump the graph in GML format
 	def do_gml_dump(self, line):
-		"Creates output as GML"
+		"Creates output as GML of access graph"
 		ofile = filename+".gml"
 		nx.write_gml(G, ofile)
 		print "[*] %s written!"%ofile
 
 	#Dump the graph in GraphML format
 	def do_graphml_dump(self, line):
-		"Creates output as GraphML"
+		"Creates output as GraphML of access graph"
 		ofile = filename+".graphml"
 		nx.write_graphml(G, ofile)
 		print "[*] %s written!"%ofile
