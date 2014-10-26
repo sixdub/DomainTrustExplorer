@@ -128,6 +128,24 @@ class GraphShell(Cmd):
 		else:
 			print "[-] Node %s or %s does not exist :(" % (node1, node2)
 
+	#Show all domains that can be reached from a source domain 
+	def do_connected(self, args):
+		"Show all nodes able to be reached from a source node"
+		if args:
+			node = args.upper()
+			if G.has_node(node):
+				conn_count = 0
+				print "[*] Domains reachable from \"%s\""%(node)
+				for dest in G.nodes():
+					if nx.has_path(G, node, dest):
+						print dest
+						conn_count+=1
+				print "[*] %d domains reachable from source"%conn_count
+			else:
+				print "[-] Error: No node in the graph"
+		else:
+			print "[-] Error: Args Needed"
+
 	#Print all neighbors of a certain node
 	def do_neighbors(self,args):
 		"Show all the neighbors for a certain node"
