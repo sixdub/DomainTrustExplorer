@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 ######
 # Author: @sixdub
@@ -32,12 +32,12 @@ class GraphShell(Cmd):
     def do_shell(self, line):
         "Run a shell command"
         if line:
-            print "[*] Running shell command:", line
+            print("[*] Running shell command:", line)
             output = os.popen(line).read()
-            print output
+            print(output)
             self.last_output = output
         else:
-            print "[-] Error: Cmd Needed"
+            print("[-] Error: Cmd Needed")
 
     #Handle our commands for exit, Ctrl-D and EOF
     def do_exit(self,line):
@@ -53,21 +53,21 @@ class GraphShell(Cmd):
         "Creates output as GML of access graph"
         ofile = filename+".gml"
         nx.write_gml(G, ofile)
-        print "[*] %s written!"%ofile
+        print("[*] %s written!"%ofile)
 
     #Dump the graph in GraphML format
     def do_graphml_dump(self, line):
         "Creates output as GraphML of access graph"
         ofile = filename+".graphml"
         nx.write_graphml(G, ofile)
-        print "\n[*] %s written!"%ofile
-        print "\n[*] Red = ParentChild, Green = External, Blue = CrossLink\n"
+        print("\n[*] %s written!"%ofile)
+        print ("\n[*] Red = ParentChild, Green = External, Blue = CrossLink\n")
 
     def do_list_nodes(self,line):
         "List all nodes for the graph"
-        print "[*] All nodes: "
+        print("[*] All nodes: ")
         for n in nx.nodes_iter(G):
-            print n
+            print(n)
 
     #Command go show all shortest paths
     def do_path(self, args):
@@ -80,12 +80,12 @@ class GraphShell(Cmd):
             node1=arglist[0].upper()
             node2=arglist[1].upper()
         else:
-            print "[-] Error: Args Needed"
+            print("[-] Error: Args Needed")
 
         #ensure they exist
         if G.has_node(node1) and G.has_node(node2):
             if (nx.has_path(G,node1,node2)):
-                print "[*] Shortest Paths from %s to %s" %(node1,node2)
+                print("[*] Shortest Paths from %s to %s" %(node1,node2))
                 #Get the shortest paths
                 paths = nx.all_shortest_paths(G, node1, node2)
 
@@ -94,11 +94,11 @@ class GraphShell(Cmd):
                     outputpath = "[*] "
                     for n in p:
                         outputpath+=n+" -> "
-                    print outputpath[:-4]
+                    print(outputpath[:-4])
             else:
-                print "[-] No path exist :("
+                print("[-] No path exist :(")
         else:
-            print "[-] Node %s or %s does not exist :(" % (node1, node2)
+            print("[-] Node %s or %s does not exist :(" % (node1, node2))
 
     #Show all paths
     def do_all_paths(self,args):
@@ -111,12 +111,12 @@ class GraphShell(Cmd):
             node1=arglist[0].upper()
             node2=arglist[1].upper()
         else:
-            print "[-] Error: Args Needed"
+            print("[-] Error: Args Needed")
 
         #ensure they exist
         if G.has_node(node1) and G.has_node(node2):
             if (nx.has_path(G,node1,node2)):
-                print "[*] All Paths from %s to %s" %(node1,node2)
+                print("[*] All Paths from %s to %s" %(node1,node2))
                 #Get the shortest paths
                 paths = nx.all_simple_paths(G, node1, node2)
 
@@ -125,11 +125,11 @@ class GraphShell(Cmd):
                     outputpath = "[*] "
                     for n in p:
                         outputpath+=n+" -> "
-                    print outputpath[:-4]
+                    print(outputpath[:-4])
             else:
-                print "[-] No path exist :("
+                print("[-] No path exist :(")
         else:
-            print "[-] Node %s or %s does not exist :(" % (node1, node2)
+            print("[-] Node %s or %s does not exist :(" % (node1, node2))
 
     #Show all domains that can be reached from a source domain 
     def do_connected(self, args):
@@ -138,16 +138,16 @@ class GraphShell(Cmd):
             node = args.upper()
             if G.has_node(node):
                 conn_count = 0
-                print "[*] Domains reachable from \"%s\""%(node)
+                print("[*] Domains reachable from \"%s\""%(node))
                 for dest in G.nodes():
                     if nx.has_path(G, node, dest):
-                        print dest
+                        print(dest)
                         conn_count+=1
-                print "[*] %d domains reachable from source"%conn_count
+                print("[*] %d domains reachable from source"%conn_count)
             else:
-                print "[-] Error: No node in the graph"
+                print("[-] Error: No node in the graph")
         else:
-            print "[-] Error: Args Needed"
+            print("[-] Error: Args Needed")
 
     #Print all neighbors of a certain node
     def do_neighbors(self,args):
@@ -158,21 +158,21 @@ class GraphShell(Cmd):
             if G.has_node(node):
                 l = G.neighbors(node)
                 
-                print "[*] Neighbors:"
+                print("[*] Neighbors:")
                 for n in l:
-                    print n
+                    print(n)
             else:
-                print "[-] Error: No node in the graph"
+                print("[-] Error: No node in the graph")
         else:
-            print "[-] Error: Args Needed"
+            print("[-] Error: Args Needed")
 
     #print all isolated nodes
     def do_isolated(self, args):
         "Show all nodes that are isolated"
-        print "[*] Isolated Nodes:"
+        print("[*] Isolated Nodes:")
         for n in G.nodes():
             if len(G.neighbors(n)) ==1:
-                print n
+                print(n)
 
     #calculate degree centrality and print top 5
     def do_center(self,args):
@@ -181,26 +181,26 @@ class GraphShell(Cmd):
         cent_items=[(b,a) for (a,b) in d.iteritems()]
         cent_items.sort()
         cent_items.reverse()
-        print "[*] Most Central Nodes"
+        print("[*] Most Central Nodes")
         for i in range(0,5):
             if cent_items[i]:
-                print cent_items[i]
+                print(cent_items[i])
 
     #print some statistics
     def do_summary(self, args):
         "Show statistics on my trust map"
         ncount = len(G)
         ecount = G.number_of_edges()
-        print "[*] Summary:"
-        print "Filename: %s"%filename
-        print "Node Count: %d"%ncount
-        print "Edge Count: %d"%ecount
+        print("[*] Summary:")
+        print("Filename: %s"%filename)
+        print("Node Count: %d"%ncount)
+        print("Edge Count: %d"%ecount)
 
     #notify the user if a node exist
     def do_is_node(self, args):
         "Tell the user if the node is in the graph"
         if args:
-            print "[*] "+args.upper()+": "+G.has_node(args.upper())
+            print("[*] "+args.upper()+": "+G.has_node(args.upper()))
 
 
 if __name__ == '__main__':
@@ -233,7 +233,7 @@ if __name__ == '__main__':
         node1 = values[0].upper()
         node2 = values[2].upper()
         relationship = values[2].upper()
-        edgetype=values[5].upper()
+        edgetype=values[4].upper()
 
         if( (args.relationship and (args.relationship.upper() in relationship)) or (not args.relationship)):
 
@@ -263,7 +263,7 @@ if __name__ == '__main__':
             elif "INBOUND" in edgetype:
                 G.add_edge(node1, node2, color=ecolor)
             else:
-                print "[-] UNRECOGNIZED RELATIONSHIP DIRECTION"
+                print("[-] UNRECOGNIZED RELATIONSHIP DIRECTION")
                 exit()
 
             c+=1
@@ -272,5 +272,5 @@ if __name__ == '__main__':
         GraphShell().do_graphml_dump(args)
 
     else:
-        print "[*] %d relationships read in... starting shell" % c
+        print("[*] %d relationships read in... starting shell" % c)
         GraphShell().cmdloop()
