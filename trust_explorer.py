@@ -231,7 +231,7 @@ if __name__ == '__main__':
         # split the CSV and store normalized values
         values = stripdata.split(',')
         node1 = values[0].upper()
-        node2 = values[2].upper()
+        node2 = values[1].upper()
         relationship = values[2].upper()
         edgetype=values[4].upper()
 
